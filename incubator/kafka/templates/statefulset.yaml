@@ -121,12 +121,8 @@ spec:
         - containerPort: 9092
           name: kafka
         {{- if .Values.external.enabled }}
-          {{- $replicas := .Values.replicas | int }}
-          {{- $root := . }}
-          {{- range $i, $e := until $replicas }}
-        - containerPort: {{ add $root.Values.external.firstListenerPort $i }}
-          name: external-{{ $i }}
-          {{- end }}
+        - containerPort: {{ .Values.external.firstListenerPort}}
+          name: external-broker
         {{- end }}
         {{- if .Values.prometheus.jmx.enabled }}
         - containerPort: {{ .Values.jmx.port }}

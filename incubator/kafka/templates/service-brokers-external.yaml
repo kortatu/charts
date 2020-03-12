@@ -55,7 +55,7 @@ spec:
       {{- else if and (eq $root.Values.external.type "LoadBalancer") (not $root.Values.external.distinct) }}
       targetPort: {{ $firstListenerPort }}
       {{- else }}
-      targetPort: {{ $externalListenerPort }}
+      targetPort: external-broker
       {{- end }}
       {{- if eq $root.Values.external.type "NodePort" }}
       nodePort: {{ $externalListenerPort }}
