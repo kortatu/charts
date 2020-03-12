@@ -74,4 +74,30 @@ spec:
     {{- include "kafka.broker.matchLabels" $root | nindent 4 }}
     statefulset.kubernetes.io/pod-name: {{ $responsiblePod | quote }}
   {{- end }}
+
+{{- if eq .Values.external.type "NodePort" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    {{- if $root.Values.external.annotations }}
+{{ toYaml $root.Values.external.annotations | indent 4 }}
+  {{- end }}
+  name: {{ include "kafka.fullname" . }}-external
+  labels:
+    {{- include "kafka.broker.labels" $root | nindent 4 }}
+  {{- if $root.Values.external.labels }}
+{{ toYaml $root.Values.external.labels | indent 4 }}
+  {{- end }}
+spec:
+  type: NodePort
+  ports:
+    - name: external-broker
+      port: 9092
+      targetPort: external-broker
+      protocol: TCP
+  selector:
+    {{- include "kafka.broker.matchLabels" $root | nindent 4 }}
+{{- end }}
 {{- end }}
